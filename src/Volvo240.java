@@ -7,17 +7,20 @@ public class Volvo240 extends NormalCar {
 
     /** Constructs a new black Volvo 240. */
     public Volvo240() {
-        super(4, 100, Color.BLACK, "Volvo240",3.5);
+        super(100, Color.BLACK, "Volvo240",3.5);
     }
 
     /**
      * returns the car's speed factor
      * @return the Car's speedFactor
      * */
-
     @Override
     protected double speedFactor(){
         return getEnginePower() * 0.01 * trimFactor;
     }
 
+    @Override
+    public int getNrOfDoors() {
+        return 4;
+    }
 }

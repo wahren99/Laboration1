@@ -21,12 +21,6 @@ public interface Vehicle extends Movable {
     }
 
     /**
-     * Returns number of doors
-     * @return number of doors
-     */
-    int getNrDoors();
-
-    /**
      * Returns the color of the car
      * @return Color of the car
      */
@@ -87,4 +81,6 @@ public interface Vehicle extends Movable {
      * @return Whether it is a big boy.
      */
     double getLength();
+
+    default void honk() { System.out.println("HOONK HOONK!"); }
 }

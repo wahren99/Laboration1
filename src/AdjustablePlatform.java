@@ -1,10 +1,9 @@
 /**
  * A nice truck bed for a truck that can be reclined.
  */
-public interface TruckBed {
-
+public interface AdjustablePlatform {
     /**
-     * Returns whether driving is allowed with this truck bed arrangement.
+     * Returns whether driving is allowed with this platform arrangement.
      *
      * @return Whether driving in this state will not cause you to lose your driver's license.
      */
@@ -18,10 +17,10 @@ public interface TruckBed {
     interface Updater<T, U> {
         /**
          * Returns the updated truck bed.
-         * @param truckBed The old truck bed.
+         * @param platform The old truck bed.
          * @param value The value to add by/set to.
          * @return The updated truck bed.
          */
-        T update(T truckBed, U value);
+        T update(T platform, U value);
     }
 }

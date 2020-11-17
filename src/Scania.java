@@ -34,10 +34,10 @@ import java.awt.*;
        \  ''  /                        \  ''  /
  * </pre>
  */
-public class Scania extends Truck<Scania.ScaniaTruckBed> {
+public class Scania extends BaseVehicle<Scania.ScaniaTruckBed> {
 
     public Scania() {
-        super(2, 200, Color.YELLOW, "ScaniaV6", 12, new ScaniaTruckBed());
+        super(200, Color.YELLOW, "ScaniaV6", 12);
     }
 
     @Override

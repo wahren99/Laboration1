@@ -3,18 +3,16 @@ import java.awt.*;
 public abstract class BaseVehicle implements Vehicle {
     /** The length of the vehicle. */
     private final double length;
-    /** Number of doors on the vehicle. */
-    private final int nrDoors;
     /** Engine power of the vehicle. */
     private final double enginePower;
     /** The current speed of the vehicle. */
     private double currentSpeed = 0;
-    /** Color of the car. */
+    /** Color of the vehicle. */
     private Color color;
-    /** The car model name. */
+    /** The vehicle model name. */
     public final String modelName;
 
-    /** The current direction of the car. */
+    /** The current direction of the vehicle. */
     private Direction direction = Direction.NORTH;
     /** The current x-coordinate. */
     private double x,
@@ -22,14 +20,13 @@ public abstract class BaseVehicle implements Vehicle {
         y;
 
     /**
-     * Constructs a new stationary unpowered Car.
+     * Constructs a new stationary unpowered vehicle.
      * @param nrDoors The number of doors.
      * @param enginePower The power of the engine.
-     * @param color The initial color of the car.
-     * @param modelName The name of the model of the car.
+     * @param color The initial color of the vehicle.
+     * @param modelName The name of the model of the vehicle.
      */
-    public BaseVehicle(int nrDoors, double enginePower, Color color, String modelName, double length) {
-        this.nrDoors = nrDoors;
+    public BaseVehicle(double enginePower, Color color, String modelName, double length) {
         this.enginePower = enginePower;
         this.color = color;
         this.modelName = modelName;
@@ -37,7 +34,6 @@ public abstract class BaseVehicle implements Vehicle {
 
         stopEngine();
     }
-
 
     /**
      * Returns the engine power.
@@ -49,8 +45,8 @@ public abstract class BaseVehicle implements Vehicle {
     }
 
     /**
-     * Returns the color of the car
-     * @return Color of the car
+     * Returns the color of the vehicle
+     * @return Color of the vehicle
      */
     @Override
     public Color getColor(){
@@ -58,15 +54,18 @@ public abstract class BaseVehicle implements Vehicle {
     }
 
     /**
-     * Sets the color of the car.
+     * Sets the color of the vehicle.
      *
-     * @param clr The new color of the car.
+     * @param clr The new color of the vehicle.
      */
     protected void setColor(Color clr){
         color = clr;
     }
 
-    @Override
+    /**
+     * Returns number of doors
+     * @return number of doors
+     */
     public int getNrDoors(){
         return nrDoors;
     }
@@ -77,7 +76,7 @@ public abstract class BaseVehicle implements Vehicle {
     }
 
     /**
-     * Changes the speed, depending on speed factor and engine power of the car.
+     * Changes the speed, depending on speed factor and engine power of the vehicle.
      *
      * @param amount The amount of speed change.
      */
@@ -101,7 +100,7 @@ public abstract class BaseVehicle implements Vehicle {
         changeSpeed(-amount);
     }
     /**
-     * Sets the current speed of the car to 0.1
+     * Sets the current speed of the vehicle to 0.1
      */
     @Override
     public void startEngine(){
@@ -109,7 +108,7 @@ public abstract class BaseVehicle implements Vehicle {
     }
 
     /**
-     * Stops the car by setting current speed to 0
+     * Stops the vehicle by setting current speed to 0
      */
     @Override
     public void stopEngine(){
