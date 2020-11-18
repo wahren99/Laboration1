@@ -1,27 +1,40 @@
 import java.awt.*;
 
 /**
- * Nice car carrier without roof for the transport.
+ * Nice earthbound or aquatic car carrier without roof for the transport.
+ *
+ * @param <T> The type of things transportable by this car transport.
  */
-public class CarTransport implements Vehicle, Transporter<NormalCar>, Transportable {
-    private final CarRamp platform;
+public class CarTransport<T extends Vehicle & Transportable> implements Vehicle, Transporter<T>, Transportable {
+    /** The base vehicle for delegation. */
     private final BaseVehicle base;
+    /** The car ramp where cars drive up and are stored. */
+    private final CarRamp<T> platform;
 
     /**
      * Constructs an instance of a Car Transport.
-     */
-    public CarTransport(String modelName, CarRamp.CarStorage carStorage) {
+     *
+     * @param modelName The name of the model of car transport.
+     * @param carStorage The way of storing cars loaded onto this transport.
+     **/
+    public CarTransport(String modelName, CarRamp.CarStorage<T> carStorage) {
         base = new BaseVehicle(200, Color.CYAN, modelName, 2 + CarRamp.MAX_LOADED_CARS_LENGTH) {
             @Override
             protected double speedFactor() {
                 return getEnginePower() * /* this fella go wroom */ 10000;
             }
         };
-        platform = new CarRamp(carStorage);
+        platform = new CarRamp<>(carStorage);
     }
 
+    /**
+     * Sets the up-or-down status of the car ramp.
+     *
+     * @throws IllegalStateException if the car ramp status is changed when the transport is moving
+     * @param status The new status of the car ramp.
+     */
     public void setPlatformStatus(CarRamp.Status status) {
-        if (!isStationary())
+        if (!isStationary() && !base.isEngineOn())
             throw new IllegalStateException("Cannot change truck bed when not stationary dum dum.");
         platform.setStatus(status);
     }
@@ -37,28 +50,28 @@ public class CarTransport implements Vehicle, Transporter<NormalCar>, Transporta
     public void move() {
         base.move();
         // Loaded cars stick to our position
-        platform.getLoadedCars().forEach(car -> {
-            car.setLocation(getLocation());
-        });
+        platform.getLoadedCars().forEach(car -> car.setLocation(getLocation()));
     }
 
     /**
-     * Loads the specified thing onto this transport.
+     * Loads the specified vehicle onto this transport.
      *
      * @throws IllegalStateException if one tries to load the transporter on to itself
      * @throws IllegalArgumentException if the thing is to far away from this transport
      * @throws IllegalArgumentException if the car is too far from this transporter
-     * @param car The thing to load onto this transporter.
+     * @param vehicle The vehicle to load onto this transporter.
      */
     @Override
-    public void loadThing(NormalCar car) {
-        if (getLocation().distance(car.getLocation()) > 2)
+    public void loadThing(T vehicle) {
+        if (vehicle == this)
+            throw new IllegalArgumentException("Attempting to load this transporter onto itself would case very bad singularity indeed");
+        if (getLocation().distance(vehicle.getLocation()) > 2)
             throw new IllegalArgumentException("Too far away!");
-        platform.loadThing(car);
+        platform.loadThing(vehicle);
     }
 
     @Override
-    public NormalCar unloadThing() {
+    public T unloadThing() {
         return platform.unloadThing();
     }
 

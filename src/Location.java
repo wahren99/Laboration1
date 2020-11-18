@@ -1,10 +1,15 @@
+/** A location in a grid. */
 public final class Location {
-    public final double x, y;
+    /** The x-coordinate. */
+    public final double x,
+            /** The y-coordinate. */
+            y;
 
     /**
-     * Constructs a new location
-     * @param x
-     * @param y
+     * Constructs a new location.
+     *
+     * @param x The initial x-coordinate.
+     * @param y The initial y-coordinate.
      */
     public Location(double x, double y) {
         this.x = x;
@@ -12,24 +17,26 @@ public final class Location {
     }
 
     /**
-     * Checks if two locations are the same
-     * @param o
-     * @return true or false
+     * Checks if two locations are the same.
+     *
+     * @param o Another object.
+     * @return True if the two objects are the same, otherwise false.
      */
     public boolean equals(Object o) {
         return o instanceof Location
                 && ((Location) o).x == x && ((Location) o).y == y;
     }
 
-
+    @Override
     public String toString() {
         return "(" + x + ", " + y + ')';
     }
 
     /**
-     * Distance between two objects
-     * @param o
-     * @return distance
+     * Euclidean distance between this locations and some other.
+     *
+     * @param o The other location.
+     * @return The distance between them.
      */
     public double distance(Location o) {
         return Math.sqrt(Math.pow(o.x - x, 2) + Math.pow(o.y - y, 2));

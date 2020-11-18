@@ -3,7 +3,7 @@ import java.awt.*;
 /**
  * Any kind of old tumbler allowed on the roads.
  */
-public interface Vehicle extends Movable {
+public interface Vehicle extends Movable, Transportable {
     /**
      * Returns the current speed of the car.
      *
@@ -55,8 +55,9 @@ public interface Vehicle extends Movable {
     void brake(double amount);
 
     /**
-     * returns the current point of position
-     * @return The current position
+     * Returns the current position of this vehicle.
+     *
+     * @return The current position.
      */
     Location getLocation();
 
@@ -73,5 +74,8 @@ public interface Vehicle extends Movable {
      */
     double getLength();
 
+    /**
+     * Honks
+     */
     default void honk() { System.out.println("HOONK HOONK!"); }
 }

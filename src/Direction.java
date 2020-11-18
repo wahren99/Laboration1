@@ -4,10 +4,15 @@ import java.awt.Point;
  * The four cardinal directions.
  */
 public enum Direction {
-    NORTH, EAST, SOUTH, WEST;
+    /** The direction north. */
+    NORTH,
+    /** The direction east. */ EAST,
+    /** The direction south. */ SOUTH,
+    /** The direction west. */ WEST;
 
     /**
      * Returns a new direction corresponding to turning 90 degrees left.
+     *
      * @return The direction left of this one.
      */
     public Direction turnLeft() {
@@ -21,6 +26,7 @@ public enum Direction {
 
     /**
      * Returns a new direction corresponding to turning 90 degrees right.
+     *
      * @return The direction right of this one.
      */
     public Direction turnRight() {
@@ -34,6 +40,7 @@ public enum Direction {
 
     /**
      * Returns a unit vector in the given direction.
+     *
      * @return A point pointing in the direction.
      */
     public Point getDelta() {

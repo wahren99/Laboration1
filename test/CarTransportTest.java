@@ -3,10 +3,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
 public class CarTransportTest {
-
     @Test
     void testLoadCar() {
-        CarTransport carTransport = new CarTransport("Trailer", new CarRamp.LifoCarStorage());
+        CarTransport<NormalCar> carTransport = new CarTransport<>("Trailer", new CarRamp.LifoCarStorage<NormalCar>());
         Volvo240 volvo240 = new Volvo240();
         volvo240.startEngine();
         volvo240.gas(1);
@@ -20,12 +19,12 @@ public class CarTransportTest {
         carTransport.setPlatformStatus(CarRamp.Status.DOWN);
         assertThrows(IllegalArgumentException.class, () -> {
             carTransport.loadThing(volvo240);
-                });
+        });
     }
 
     @Test
     void testMoveWithLoadedCar() {
-        CarTransport carTransport = new CarTransport("Trailer", new CarRamp.LifoCarStorage());
+        CarTransport<NormalCar> carTransport = new CarTransport<>("Trailer", new CarRamp.LifoCarStorage<NormalCar>());
         Saab95 saab = new Saab95();
         carTransport.setPlatformStatus(CarRamp.Status.DOWN);
         carTransport.loadThing(saab);
@@ -38,7 +37,7 @@ public class CarTransportTest {
 
     @Test
     void testMaxNumberOfLoadedCarsThatCanPossiblyFitOnTheTruckAtTheSameTimeWithoutHangingOverTheEdge() {
-        CarTransport carTransport = new CarTransport("Trailer", new CarRamp.LifoCarStorage());
+        CarTransport<NormalCar> carTransport = new CarTransport<>("Trailer", new CarRamp.LifoCarStorage<NormalCar>());
         carTransport.setPlatformStatus(CarRamp.Status.DOWN);
 
         assertThrows(IllegalArgumentException.class, () -> {
@@ -51,7 +50,7 @@ public class CarTransportTest {
 
     @Test
     void testFerry(){
-        CarTransport ferry = new Ferry();
+        Ferry ferry = new Ferry();
         ferry.setPlatformStatus(CarRamp.Status.DOWN);
         NormalCar volvo = new Volvo240();
         ferry.loadThing(volvo);

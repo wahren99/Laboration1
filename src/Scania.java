@@ -35,8 +35,10 @@ import java.awt.*;
  * </pre>
  */
 public class Scania extends BaseVehicle {
+    /** The truck bed platform. */
     private final ScaniaTruckBed platform = new ScaniaTruckBed();
 
+    /** Constructs a new Scania truck. */
     public Scania() {
         super(200, Color.YELLOW, "ScaniaV6", 12);
     }
@@ -53,16 +55,33 @@ public class Scania extends BaseVehicle {
         super.startEngine();
     }
 
+    /**
+     * Sets the angle of the truck bed.
+     *
+     * @throws IllegalStateException If the truck is not stationary.
+     * @param angle The new angle of the truck bed.
+     */
     public void setTruckBedAngle(float angle) {
-        if (!isStationary())
+        if (!isStationary() && !isEngineOn())
             throw new IllegalStateException("Cannot change angle while driving");
         platform.setAngle(angle);
     }
 
+    /**
+     * Increases or decreases angle of the truck bed.
+     *
+     * @throws IllegalStateException If the truck is not stationary.
+     * @param angle How much to decrease or increase angle.
+     */
     public void addTruckBedAngle(float angle) {
         setTruckBedAngle(getTruckBedAngle() + angle);
     }
 
+    /**
+     * Gets the current angle of the truck bed.
+     *
+     * @return the angle of the truck bed.
+     */
     public float getTruckBedAngle() {
         return platform.getAngle();
     }
@@ -80,15 +99,26 @@ public class Scania extends BaseVehicle {
          */
         private float angle;
 
+        /** Constructs a new Scania truck bed at the specified angle.
+         *
+         * @param angle The initial angle.
+         */
         public ScaniaTruckBed(float angle) {
             this.angle = angle;
         }
 
+        /**
+         * Constructs a new Scania truck bed in resting position.
+         */
         public ScaniaTruckBed() {
             this(MIN_ANGLE);
         }
 
-
+        /**
+         * Gets the angle of the truck bed.
+         *
+         * @return The current angle.
+         */
         public float getAngle(){
             return angle;
         }
@@ -98,6 +128,13 @@ public class Scania extends BaseVehicle {
         /** The truck bed is fully reclined at this angle. Unsafe to drive. */
                 MAX_ANGLE = 70;
 
+        /**
+         * Sets the angle.
+         *
+         * It is clamped to be within the accepted interval.
+         *
+         * @param angle The new angle.
+         */
         public void setAngle(float angle) {
                     this.angle = Math.min(Math.max(angle, MIN_ANGLE), MAX_ANGLE);
                 }

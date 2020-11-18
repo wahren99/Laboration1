@@ -1,5 +1,6 @@
 import java.awt.*;
 
+/** Generic vehicle that other vehicles may be based on. */
 public abstract class BaseVehicle implements Vehicle, Transportable {
     /** The length of the vehicle. */
     private final double length;
@@ -11,6 +12,8 @@ public abstract class BaseVehicle implements Vehicle, Transportable {
     private Color color;
     /** The vehicle model name. */
     public final String modelName;
+    /** Whether the engine is running. */
+    private boolean engineOn = false;
 
     /** The current direction of the vehicle. */
     private Direction direction = Direction.NORTH;
@@ -21,6 +24,7 @@ public abstract class BaseVehicle implements Vehicle, Transportable {
 
     /**
      * Constructs a new stationary unpowered vehicle.
+     *
      * @param enginePower The power of the engine.
      * @param color The initial color of the vehicle.
      * @param modelName The name of the model of the vehicle.
@@ -29,7 +33,7 @@ public abstract class BaseVehicle implements Vehicle, Transportable {
         this.enginePower = enginePower;
         this.color = color;
         this.modelName = modelName;
-        this.length=length;
+        this.length = length;
 
         stopEngine();
     }
@@ -43,10 +47,6 @@ public abstract class BaseVehicle implements Vehicle, Transportable {
         return enginePower;
     }
 
-    /**
-     * Returns the color of the vehicle
-     * @return Color of the vehicle
-     */
     @Override
     public Color getColor(){
         return color;
@@ -72,6 +72,8 @@ public abstract class BaseVehicle implements Vehicle, Transportable {
      * @param amount The amount of speed change.
      */
     private void changeSpeed(double amount) {
+        if (!engineOn)
+            throw new IllegalStateException("Engine is not running!");
         if (Math.abs(amount) > 1)
             throw new IllegalArgumentException("Amount must be in interval (-1, 1)");
         currentSpeed = Math.max(Math.min(getCurrentSpeed() + speedFactor() * amount, enginePower), 0);
@@ -90,24 +92,31 @@ public abstract class BaseVehicle implements Vehicle, Transportable {
         if(amount < 0) throw new IllegalArgumentException("Amount must be positive");
         changeSpeed(-amount);
     }
-    /**
-     * Sets the current speed of the vehicle to 0.1
-     */
+
     @Override
-    public void startEngine(){
+    public void startEngine() {
+        engineOn = true;
         currentSpeed = 0.1;
     }
 
-    /**
-     * Stops the vehicle by setting current speed to 0
-     */
     @Override
-    public void stopEngine(){
+    public void stopEngine() {
+        engineOn = false;
         currentSpeed = 0;
     }
 
     /**
+     * Returns whether the engine is running hot.
+     *
+     * @return Whether the engine is powered on.
+     */
+    public boolean isEngineOn() {
+        return engineOn;
+    }
+
+    /**
      * Returns the acceleration multiplier.
+     *
      * @return The multiplier.
      */
     protected abstract double speedFactor();
@@ -147,6 +156,7 @@ public abstract class BaseVehicle implements Vehicle, Transportable {
     }
 
     @Override
-    public double getLength() {return length;}
-
+    public double getLength() {
+        return length;
+    }
 }

@@ -6,43 +6,59 @@ import java.util.Stack;
 /**
  * Class CarRamp that can load cars.
  */
-public final class CarRamp implements AdjustablePlatform, Transporter<NormalCar> {
+public final class CarRamp<T extends Vehicle & Transportable> implements AdjustablePlatform, Transporter<T> {
     /**
      * Status of ramp can either be up or down.
      */
     public enum Status {
         /** The ramp is up. */
         UP,
-        /** The ramp is down. */
+        /** The ramp is down. Cars can drive on up. */
         DOWN
     }
 
-    public interface CarStorage extends Collection<NormalCar> {
-        void addCar(NormalCar car);
+    /**
+     * A way of storing cars.
+     */
+    public interface CarStorage<T extends Vehicle> extends Collection<T> {
+        /**
+         * Adds the car to this car storage. It is now added.
+         *
+         * @param car The car to add.
+         */
+        void addCar(T car);
 
-        NormalCar removeCar();
+        /**
+         * Removes a car from this car storage.
+         *
+         * @return The removed car.
+         */
+        T removeCar();
     }
 
-    public static class LifoCarStorage extends Stack<NormalCar> implements CarStorage {
+
+    /** A car storage where cars are removed in last-in first-out order. */
+    public static final class LifoCarStorage<T extends Vehicle> extends Stack<T> implements CarStorage<T> {
         @Override
-        public void addCar(NormalCar car) {
+        public void addCar(T car) {
             push(car);
         }
 
         @Override
-        public NormalCar removeCar() {
+        public T removeCar() {
             return pop();
         }
     }
 
-    public static class FifoCarStorage extends ArrayDeque<NormalCar> implements CarStorage {
+    /** A car storage where cars are removed in first-in first-out order. */
+    public static final class FifoCarStorage<T extends Vehicle> extends ArrayDeque<T> implements CarStorage<T> {
         @Override
-        public void addCar(NormalCar car) {
+        public void addCar(T car) {
             add(car);
         }
 
         @Override
-        public NormalCar removeCar() {
+        public T removeCar() {
             return remove();
         }
     }
@@ -52,16 +68,21 @@ public final class CarRamp implements AdjustablePlatform, Transporter<NormalCar>
 
     /** Status of ramp **/
     private Status status;
+    /** Collection of currently loaded cars. */
+    private final CarStorage<T> loadedCars;
 
-    private final CarStorage loadedCars;
-
-    /** constructs car ramp **/
-    public CarRamp(Status status, CarStorage storage) {
+    /**
+     * Constructs car ramp.
+     *
+     * @param status The initial status of the car ramp.
+     * @param storage The car storage implementation to use for this car ramp.
+     */
+    public CarRamp(Status status, CarStorage<T> storage) {
         this.status = status;
         this.loadedCars = storage;
     }
-    /** Sets up as default position of ramp **/
-    public CarRamp(CarStorage storage) {
+    /** Sets up as default position of ramp. **/
+    public CarRamp(CarStorage<T> storage) {
         this(Status.UP, storage);
     }
 
@@ -74,6 +95,11 @@ public final class CarRamp implements AdjustablePlatform, Transporter<NormalCar>
         return status;
     }
 
+    /**
+     * Sets whether the ramp is up or down.
+     *
+     * @param status The new status.
+     */
     public void setStatus(Status status) {
         this.status = status;
     }
@@ -86,12 +112,16 @@ public final class CarRamp implements AdjustablePlatform, Transporter<NormalCar>
         };
     }
 
-    public Iterable<NormalCar> getLoadedCars() {
+    /**
+     * Returns an iterator of the currently loaded cars.
+     * @return The currently loaded cars.
+     */
+    public Iterable<T> getLoadedCars() {
         return loadedCars;
     }
 
     @Override
-    public void loadThing(NormalCar car) {
+    public void loadThing(T car) {
         if (getStatus() != CarRamp.Status.DOWN)
             throw new IllegalStateException("Ramp is not lowered!");
 
@@ -102,18 +132,10 @@ public final class CarRamp implements AdjustablePlatform, Transporter<NormalCar>
     }
 
     @Override
-    public NormalCar unloadThing() {
+    public T unloadThing() {
         if (getStatus() != CarRamp.Status.DOWN)
             throw new IllegalStateException("Ramp is not lowered!");
 
         return loadedCars.removeCar();
     }
-
-    /**
-     * Implements Updater. Sets the status of the ramp.
-     */
-    public static final Updater<CarRamp, Status> setStatus = (truckBed, value) -> {
-        if (value == null) throw new IllegalArgumentException("Ramp status cannot be null ya dumb dumb");
-        return new CarRamp(value, truckBed.loadedCars);
-    };
 }
