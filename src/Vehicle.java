@@ -60,15 +60,6 @@ public interface Vehicle extends Movable {
      */
     Location getLocation();
 
-    /**
-     * Teleports the car to the specified location.
-     *
-     * We have assigned Gandalf for this task.
-     *
-     * @param location The new location.
-     */
-    void setLocation(Location location);
-
     /** Returns the direction we are currently headed.
      *
      * @return The current direction.

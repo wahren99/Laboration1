@@ -1,6 +1,7 @@
 import java.util.ArrayDeque;
 import java.util.Collection;
 import java.util.Deque;
+import java.util.Stack;
 
 /**
  * Class CarRamp that can load cars.
@@ -20,6 +21,30 @@ public final class CarRamp implements AdjustablePlatform, Transporter<NormalCar>
         void addCar(NormalCar car);
 
         NormalCar removeCar();
+    }
+
+    public static class LifoCarStorage extends Stack<NormalCar> implements CarStorage {
+        @Override
+        public void addCar(NormalCar car) {
+            push(car);
+        }
+
+        @Override
+        public NormalCar removeCar() {
+            return pop();
+        }
+    }
+
+    public static class FifoCarStorage extends ArrayDeque<NormalCar> implements CarStorage {
+        @Override
+        public void addCar(NormalCar car) {
+            add(car);
+        }
+
+        @Override
+        public NormalCar removeCar() {
+            return remove();
+        }
     }
 
     /** The maximum length of the carriage. */

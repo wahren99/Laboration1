@@ -59,7 +59,7 @@ class Volvo240Test {
     @Test
     void testDefaultValues() {
         NormalCar car = new Volvo240();
-        assertEquals(4, car.getNrDoors());
+        assertEquals(4, car.getNrOfDoors());
         assertEquals(100, car.getEnginePower());
         assertEquals(Color.BLACK, car.getColor());
         assertEquals(new Location(0, 0), car.getLocation());

@@ -6,7 +6,7 @@ public class CarTransportTest {
 
     @Test
     void testLoadCar() {
-        CarTransport carTransport = new CarTransport();
+        CarTransport carTransport = new CarTransport("Trailer", new CarRamp.LifoCarStorage());
         Volvo240 volvo240 = new Volvo240();
         volvo240.startEngine();
         volvo240.gas(1);
@@ -17,21 +17,19 @@ public class CarTransportTest {
         }
 
         assertTrue(volvo240.getLocation().distance(carTransport.getLocation()) > 2);
-        carTransport.changeTruckBed(CarTransport.CarRamp.setStatus, CarTransport.CarRamp.Status.DOWN);
+        carTransport.setPlatformStatus(CarRamp.Status.DOWN);
         assertThrows(IllegalArgumentException.class, () -> {
-                    carTransport.loadCar(volvo240);
+            carTransport.loadThing(volvo240);
                 });
-
-
     }
 
     @Test
     void testMoveWithLoadedCar() {
-        CarTransport carTransport = new CarTransport();
+        CarTransport carTransport = new CarTransport("Trailer", new CarRamp.LifoCarStorage());
         Saab95 saab = new Saab95();
-        carTransport.changeTruckBed(CarTransport.CarRamp.setStatus, CarTransport.CarRamp.Status.DOWN);
-        carTransport.loadCar(saab);
-        carTransport.changeTruckBed(CarTransport.CarRamp.setStatus, CarTransport.CarRamp.Status.UP);
+        carTransport.setPlatformStatus(CarRamp.Status.DOWN);
+        carTransport.loadThing(saab);
+        carTransport.setPlatformStatus(CarRamp.Status.UP);
         carTransport.startEngine();
         carTransport.move();
         assertEquals(saab.getLocation(), new Location(0,0.1));
@@ -40,14 +38,25 @@ public class CarTransportTest {
 
     @Test
     void testMaxNumberOfLoadedCarsThatCanPossiblyFitOnTheTruckAtTheSameTimeWithoutHangingOverTheEdge() {
-        CarTransport carTransport = new CarTransport();
-        carTransport.changeTruckBed(CarTransport.CarRamp.setStatus, CarTransport.CarRamp.Status.DOWN);
+        CarTransport carTransport = new CarTransport("Trailer", new CarRamp.LifoCarStorage());
+        carTransport.setPlatformStatus(CarRamp.Status.DOWN);
 
         assertThrows(IllegalArgumentException.class, () -> {
             for (int i = 0; i < /* this many cars should NOT fit */ 200; ++i) {
                 Volvo240 volvo240 = new Volvo240();
-                carTransport.loadCar(volvo240);
+                carTransport.loadThing(volvo240);
             }
         });
+    }
+
+    @Test
+    void testFerry(){
+        CarTransport ferry = new Ferry();
+        ferry.setPlatformStatus(CarRamp.Status.DOWN);
+        NormalCar volvo = new Volvo240();
+        ferry.loadThing(volvo);
+        ferry.loadThing(new Saab95());
+        // First thing outta this thing here's belly should be the volvo
+        assertEquals(volvo, ferry.unloadThing());
     }
 }

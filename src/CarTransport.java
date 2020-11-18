@@ -3,20 +3,21 @@ import java.awt.*;
 /**
  * Nice car carrier without roof for the transport.
  */
-public class CarTransport implements Vehicle, Transporter<NormalCar> {
-    private final CarRamp platform = new CarRamp();
+public class CarTransport implements Vehicle, Transporter<NormalCar>, Transportable {
+    private final CarRamp platform;
     private final BaseVehicle base;
 
     /**
      * Constructs an instance of a Car Transport.
      */
-    public CarTransport(String modelName) {
+    public CarTransport(String modelName, CarRamp.CarStorage carStorage) {
         base = new BaseVehicle(200, Color.CYAN, modelName, 2 + CarRamp.MAX_LOADED_CARS_LENGTH) {
             @Override
             protected double speedFactor() {
                 return getEnginePower() * /* this fella go wroom */ 10000;
             }
         };
+        platform = new CarRamp(carStorage);
     }
 
     public void setPlatformStatus(CarRamp.Status status) {
@@ -41,6 +42,14 @@ public class CarTransport implements Vehicle, Transporter<NormalCar> {
         });
     }
 
+    /**
+     * Loads the specified thing onto this transport.
+     *
+     * @throws IllegalStateException if one tries to load the transporter on to itself
+     * @throws IllegalArgumentException if the thing is to far away from this transport
+     * @throws IllegalArgumentException if the car is too far from this transporter
+     * @param car The thing to load onto this transporter.
+     */
     @Override
     public void loadThing(NormalCar car) {
         if (getLocation().distance(car.getLocation()) > 2)

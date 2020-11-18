@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public abstract class BaseVehicle implements Vehicle {
+public abstract class BaseVehicle implements Vehicle, Transportable {
     /** The length of the vehicle. */
     private final double length;
     /** Engine power of the vehicle. */
@@ -21,7 +21,6 @@ public abstract class BaseVehicle implements Vehicle {
 
     /**
      * Constructs a new stationary unpowered vehicle.
-     * @param nrDoors The number of doors.
      * @param enginePower The power of the engine.
      * @param color The initial color of the vehicle.
      * @param modelName The name of the model of the vehicle.
@@ -60,14 +59,6 @@ public abstract class BaseVehicle implements Vehicle {
      */
     protected void setColor(Color clr){
         color = clr;
-    }
-
-    /**
-     * Returns number of doors
-     * @return number of doors
-     */
-    public int getNrDoors(){
-        return nrDoors;
     }
 
     @Override
@@ -125,7 +116,6 @@ public abstract class BaseVehicle implements Vehicle {
     public Location getLocation(){
         return new Location(x, y);
     }
-
 
     @Override
     public void setLocation(Location location){

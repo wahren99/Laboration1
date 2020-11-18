@@ -3,11 +3,11 @@
  *
  * @param <T> The type of thing that can be transported by this thing.
  */
-public interface Transporter<T> {
+public interface Transporter<T extends Transportable> {
     /**
      * Loads the specified thing onto this transport.
-     * @throws IllegalStateException if one tries to load the car transport on to itself
-     * // @throws IllegalStateException if car ramp is up
+     *
+     * @throws IllegalStateException if one tries to load the transporter on to itself
      * @throws IllegalArgumentException if the thing is to far away from this transport
      * @param thing The thing to load onto this transporter.
      */
@@ -15,7 +15,8 @@ public interface Transporter<T> {
 
     /**
      * Unloads a thing.
-     * @return the unloaded Car.
+     *
+     * @return The unloaded thing.
      */
     T unloadThing();
 }

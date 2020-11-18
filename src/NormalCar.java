@@ -1,7 +1,7 @@
 import java.awt.*;
 
 /** A person car of some sort. */
-public abstract class NormalCar extends BaseVehicle {
+public abstract class NormalCar extends BaseVehicle implements Transportable {
     /**
      * Constructs a new stationary unpowered Car.
      *
