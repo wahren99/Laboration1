@@ -5,7 +5,7 @@ import java.awt.*;
  *
  * @param <T> The type of things transportable by this car transport.
  */
-public class CarTransport<T extends Vehicle & Transportable> implements Vehicle, Transporter<T>, Transportable {
+public class CarTransport<T extends Vehicle & Transportable> implements Vehicle, Transporter<T>{
     /** The base vehicle for delegation. */
     private final BaseVehicle base;
     /** The car ramp where cars drive up and are stored. */
@@ -34,7 +34,7 @@ public class CarTransport<T extends Vehicle & Transportable> implements Vehicle,
      * @param status The new status of the car ramp.
      */
     public void setPlatformStatus(CarRamp.Status status) {
-        if (!isStationary() && !base.isEngineOn())
+        if (!isStationary() || base.isEngineOn())
             throw new IllegalStateException("Cannot change truck bed when not stationary dum dum.");
         platform.setStatus(status);
     }

@@ -27,12 +27,14 @@ public interface Vehicle extends Movable, Transportable {
     Color getColor();
 
     /**
-     * Sets the current speed of the car to 0.1
+     * Starts the engine.
+     *
+     * The vehicle cannot accelerate while the engine is off.
      */
     void startEngine();
 
     /**
-     * Stops the car by setting current speed to 0
+     * Stops the engine.
      */
     void stopEngine();
 

@@ -40,12 +40,12 @@ public class Scania extends BaseVehicle {
 
     /** Constructs a new Scania truck. */
     public Scania() {
-        super(200, Color.YELLOW, "ScaniaV6", 12);
+        super(120, Color.YELLOW, "ScaniaV6", 12);
     }
 
     @Override
     protected double speedFactor() {
-        return getEnginePower();
+        return getEnginePower() * 0.01;
     }
 
     @Override
@@ -62,7 +62,7 @@ public class Scania extends BaseVehicle {
      * @param angle The new angle of the truck bed.
      */
     public void setTruckBedAngle(float angle) {
-        if (!isStationary() && !isEngineOn())
+        if (!isStationary() || isEngineOn())
             throw new IllegalStateException("Cannot change angle while driving");
         platform.setAngle(angle);
     }

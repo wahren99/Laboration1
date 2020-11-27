@@ -17,6 +17,24 @@ public final class Location {
     }
 
     /**
+     * Returns the x-coordinate of this location.
+     *
+     * @return The x-coordinate.
+     */
+    public double getX() {
+        return x;
+    }
+
+    /**
+     * Returns the y-coordinate of this location.
+     *
+     * @return The y-coordinate.
+     */
+    public double getY() {
+        return y;
+    }
+
+    /**
      * Checks if two locations are the same.
      *
      * @param o Another object.

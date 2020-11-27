@@ -1,7 +1,7 @@
 import java.awt.*;
 
 /** Generic vehicle that other vehicles may be based on. */
-public abstract class BaseVehicle implements Vehicle, Transportable {
+public abstract class BaseVehicle implements Vehicle {
     /** The length of the vehicle. */
     private final double length;
     /** Engine power of the vehicle. */
@@ -72,8 +72,6 @@ public abstract class BaseVehicle implements Vehicle, Transportable {
      * @param amount The amount of speed change.
      */
     private void changeSpeed(double amount) {
-        if (!engineOn)
-            throw new IllegalStateException("Engine is not running!");
         if (Math.abs(amount) > 1)
             throw new IllegalArgumentException("Amount must be in interval (-1, 1)");
         currentSpeed = Math.max(Math.min(getCurrentSpeed() + speedFactor() * amount, enginePower), 0);
@@ -81,6 +79,9 @@ public abstract class BaseVehicle implements Vehicle, Transportable {
 
     @Override
     public void gas(double amount) {
+        if (!engineOn)
+            throw new IllegalStateException("Engine is not running!");
+
         if (amount < 0) throw new IllegalArgumentException("Amount must be positive");
         if (amount > 1) throw new IllegalArgumentException("Amount must be max 1");
         changeSpeed(amount);
@@ -96,13 +97,11 @@ public abstract class BaseVehicle implements Vehicle, Transportable {
     @Override
     public void startEngine() {
         engineOn = true;
-        currentSpeed = 0.1;
     }
 
     @Override
     public void stopEngine() {
         engineOn = false;
-        currentSpeed = 0;
     }
 
     /**
@@ -142,7 +141,7 @@ public abstract class BaseVehicle implements Vehicle, Transportable {
         Point delta = direction.getDelta();
         x += getCurrentSpeed() * delta.getX();
         y += getCurrentSpeed() * delta.getY();
-
+        currentSpeed *= 0.999; // Deceleration due to air resistance
     }
 
     @Override
