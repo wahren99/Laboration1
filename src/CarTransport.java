@@ -20,6 +20,11 @@ public class CarTransport<T extends Vehicle & Transportable> implements Vehicle,
     public CarTransport(String modelName, CarRamp.CarStorage<T> carStorage) {
         base = new BaseVehicle(200, Color.CYAN, modelName, 2 + CarRamp.MAX_LOADED_CARS_LENGTH) {
             @Override
+            public <R> R accept(VehicleVisitor<R> visitor) {
+                return visitor.visit(CarTransport.this);
+            }
+
+            @Override
             protected double speedFactor() {
                 return getEnginePower() * /* this fella go wroom */ 10000;
             }
@@ -128,5 +133,10 @@ public class CarTransport<T extends Vehicle & Transportable> implements Vehicle,
     @Override
     public Direction getDirection() {
         return base.getDirection();
+    }
+
+    @Override
+    public <R> R accept(VehicleVisitor<R> visitor) {
+        return base.accept(visitor);
     }
 }

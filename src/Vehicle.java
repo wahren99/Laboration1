@@ -77,7 +77,16 @@ public interface Vehicle extends Movable, Transportable {
     double getLength();
 
     /**
-     * Honks
+     * Accepts the given visitor and dispatches to the specific method.
+     *
+     * @param visitor The visitor.
+     * @param <R> The return value of the visitor method.
+     * @return The value returned by the visitor.
+     */
+    <R> R accept(VehicleVisitor<R> visitor);
+
+    /**
+     * Honks.
      */
     default void honk() { System.out.println("HOONK HOONK!"); }
 }

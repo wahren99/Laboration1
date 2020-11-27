@@ -44,6 +44,11 @@ public class Scania extends BaseVehicle {
     }
 
     @Override
+    public <R> R accept(VehicleVisitor<R> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
     protected double speedFactor() {
         return getEnginePower() * 0.01;
     }

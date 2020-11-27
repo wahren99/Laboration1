@@ -5,62 +5,28 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-// This panel represent the animated part of the view with the car images.
+/**
+ * This panel represent the animated part of the view with the car images.
+ */
+public final class DrawPanel extends JPanel {
+    /** The model for what to draw. */
+    private final ViewModel viewModel;
 
-public class DrawPanel extends JPanel{
-
-    // Just a single image, TODO: Generalize
-    BufferedImage volvoImage, saabImage, scaniaImage;
-    // To keep track of a singel cars position
-    Point volvoPoint = new Point();
-    Point saabPoint = new Point();
-    Point scaniaPoint = new Point();
-
-    protected void moveVolvo(int x, int y) {
-        volvoPoint.x = x;
-        volvoPoint.y = y;
-    }
-
-    protected void moveSaab(int x, int y) {
-        saabPoint.x = x;
-        saabPoint.y = y;
-    }
-
-    protected void moveScania(int x, int y) {
-        scaniaPoint.x = x;
-        scaniaPoint.y = y;
-    }
-
-    // Initializes the panel and reads the images
-    public DrawPanel(int x, int y) {
+    /** Initializes the panel and reads the images **/
+    public DrawPanel(ViewModel viewModel, int x, int y) {
         this.setDoubleBuffered(true);
         this.setPreferredSize(new Dimension(x, y));
         this.setBackground(Color.green);
-        // Print an error message in case file is not found with a try/catch block
-        try {
-            // You can remove the "pics" part if running outside of IntelliJ and
-            // everything is in the same main folder.
-            volvoImage = ImageIO.read(new File("pics/Volvo240.jpg"));
-            saabImage = ImageIO.read(new File("pics/Saab95.jpg"));
-            scaniaImage = ImageIO.read(new File("pics/Scania.jpg"));
 
-            // Rememember to rightclick src New -> Package -> name: pics -> MOVE *.jpg to pics.
-            // if you are starting in IntelliJ.
-            // volvoImage = ImageIO.read(DrawPanel.class.getResourceAsStream("pics/Volvo240.jpg"));
-        } catch (IOException ex)
-        {
-            ex.printStackTrace();
-        }
-
+        this.viewModel = viewModel;
     }
 
-    // This method is called each time the panel updates/refreshes/repaints itself
-    // TODO: Change to suit your needs.
+    /** This method is called each time the panel updates/refreshes/repaints itself. */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(volvoImage, volvoPoint.x, volvoPoint.y, null); // see javadoc for more info on the parameters
-        g.drawImage(saabImage, saabPoint.x, saabPoint.y, null);
-        g.drawImage(scaniaImage, scaniaPoint.x, scaniaPoint.y, null);
+        for (CarSprite sprite : viewModel.getSprites()) {
+            g.drawImage(sprite.getImage(), sprite.getX(), sprite.getY(), null); // see javadoc for more info on the parameters
+        }
     }
 }

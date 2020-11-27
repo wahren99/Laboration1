@@ -26,6 +26,11 @@ public class Saab95 extends NormalCar {
     }
 
     @Override
+    public <R> R accept(VehicleVisitor<R> visitor) {
+        return visitor.visit(this);
+    }
+
+    @Override
     protected double speedFactor() {
         double turbo = 1;
         if (turboOn) turbo = 1.3;

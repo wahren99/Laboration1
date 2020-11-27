@@ -11,22 +11,35 @@ import java.awt.event.ActionListener;
  * It communicates with the Controller by calling methods of it when an action fires of in
  * each of it's components.
  **/
-public class CarView extends JFrame{
-    private static final int X = 800;
-    private static final int Y = 800;
+public class CarView extends JFrame implements UpdateListener {
+    /** the width of the frame*/
+    public static final int X = 800;
+    /** the height of the frame */
+    public static final int Y = 800;
 
-    // The controller member
+    /** The controller member */
     CarController carC;
 
-    DrawPanel drawPanel = new DrawPanel(X, Y-240);
+    /** The Draw panel used to draw*/
+    private final DrawPanel drawPanel;
 
+    /** The control panel with our buttons*/
     JPanel controlPanel = new JPanel();
 
+    /** Panel for gassing controls. */
     JPanel gasPanel = new JPanel();
+
+    /** Constructs a spinner, used to vary the gas amount.
+     * The initial amount is 0.
+     */
     JSpinner gasSpinner = new JSpinner();
     int gasAmount = 0;
     JLabel gasLabel = new JLabel("Amount of gas");
 
+    /*
+     * constructs buttons used to gas, brake, change Saab turbo status,
+     * to change Scania bed status and to start/stop all cars
+     */
     JButton gasButton = new JButton("Gas");
     JButton brakeButton = new JButton("Brake");
     JButton turboOnButton = new JButton("Saab Turbo on");
@@ -37,9 +50,17 @@ public class CarView extends JFrame{
     JButton startButton = new JButton("Start all cars");
     JButton stopButton = new JButton("Stop all cars");
 
-    // Constructor
-    public CarView(String framename, CarController cc){
+    /**
+     *  Constructs a carview
+     * @param framename
+     * @param cc
+     * @param viewModel
+     */
+    public CarView(String framename, CarController cc, ViewModel viewModel){
         this.carC = cc;
+        viewModel.setListener(this);
+        drawPanel = new DrawPanel(viewModel, X, Y-240);
+
         initComponents(framename);
     }
 
@@ -53,7 +74,9 @@ public class CarView extends JFrame{
 
         this.add(drawPanel);
 
-
+        /**
+         * sets minimum, maximum, and stepsize for the gas spinner.
+         */
 
         SpinnerModel spinnerModel =
                 new SpinnerNumberModel(0, //initial value
@@ -67,11 +90,19 @@ public class CarView extends JFrame{
             }
         });
 
+        /**
+         * edits layout of the gas panel.
+         */
         gasPanel.setLayout(new BorderLayout());
         gasPanel.add(gasLabel, BorderLayout.PAGE_START);
         gasPanel.add(gasSpinner, BorderLayout.PAGE_END);
 
         this.add(gasPanel);
+
+        /**
+         * sets layot of the control panel.
+         * adds all the buttons and sets position.
+         */
 
         controlPanel.setLayout(new GridLayout(2,4));
 
@@ -86,12 +117,18 @@ public class CarView extends JFrame{
         controlPanel.setBackground(Color.CYAN);
 
 
+        /**
+         * sets color of the start button.
+         */
         startButton.setBackground(Color.blue);
         startButton.setForeground(Color.green);
         startButton.setPreferredSize(new Dimension(X/5-15,200));
         startButton.addActionListener(e -> carC.startEngine());
         this.add(startButton);
 
+        /**
+         * sets color of the stop button.
+         */
 
         stopButton.setBackground(Color.red);
         stopButton.setForeground(Color.black);
@@ -99,9 +136,11 @@ public class CarView extends JFrame{
         stopButton.addActionListener(e -> carC.stopEngine());
         this.add(stopButton);
 
+        /** edits turbo status when the turbo buttons are pressed.*/
         turboOnButton.addActionListener(e -> carC.turnTurboOn());
         turboOffButton.addActionListener(e -> carC.turnTurboOff());
 
+        /** edits turbo status when the turbo buttons are pressed.*/
         liftBedButton.addActionListener(e -> carC.liftTruckBed());
         lowerBedButton.addActionListener(e -> carC.lowerTruckBed());
 
@@ -121,5 +160,14 @@ public class CarView extends JFrame{
         this.setVisible(true);
         // Make sure the frame exits when "x" is pressed
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    }
+
+    /**
+     * Repaints when called upon
+     */
+    @Override
+    public void onUpdate() {
+        // repaint() calls the paintComponent method of the panel
+        drawPanel.repaint();
     }
 }
