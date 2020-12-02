@@ -21,12 +21,6 @@ public interface Vehicle extends Movable, Transportable {
     }
 
     /**
-     * Returns the color of the car
-     * @return Color of the car
-     */
-    Color getColor();
-
-    /**
      * Starts the engine.
      *
      * The vehicle cannot accelerate while the engine is off.

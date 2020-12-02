@@ -2,8 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
 import java.awt.image.BufferedImage;
 import java.util.stream.Collectors;
 
@@ -28,7 +26,8 @@ public class CarController implements UpdateListener {
     // CarView frame;
 
     private final CarModel model;
-    final ViewModel viewModel;
+    private final ViewModel viewModel;
+    private Size drawPanelSize;
 
     private final SpriteVehicleVisitor spriteVehicleVisitor = new SpriteVehicleVisitor();
 
@@ -37,7 +36,7 @@ public class CarController implements UpdateListener {
      */
     public CarController() {
         // TODO get these width/height values from somewhere else
-        model = new CarModel(this, CarView.X, CarView.Y - 240);
+        model = new CarModel(this);
         viewModel = new ViewModel(renderModel());
     }
 
@@ -47,10 +46,9 @@ public class CarController implements UpdateListener {
         // Instance of this class
         CarController cc = new CarController();
 
-
-
         // Start a new view and send a reference of self
         CarView view = new CarView("CarSim 2.0 - 1337 edition", cc, cc.viewModel);
+        cc.drawPanelSize = view.getDrawPanelSize();
 
         // Start the timer
         cc.timer.start();
@@ -61,8 +59,39 @@ public class CarController implements UpdateListener {
      * view to update its images. Change this method to your needs.
      */
     private class TimerListener implements ActionListener {
+        @Override
         public void actionPerformed(ActionEvent e) {
             model.tick();
+
+            // Check if any vehicles are out of bounds. If so discipline them and move on,
+            // i.e. turn them 180 degrees right before they collide with the walls.
+            for (Vehicle vehicle : model.getVehicles()) {
+                BufferedImage image = vehicle.accept(spriteVehicleVisitor);
+                int imageWidth = image.getWidth(),
+                        imageHeight = image.getHeight();
+
+                Location oldLocation = vehicle.getLocation();
+
+                // Check the x-axis
+                if (vehicle.getLocation().getX() < 0) {
+                    vehicle.setLocation(new Location(0, oldLocation.getY()));
+                    vehicle.turnAround();
+                } else if (vehicle.getLocation().getX() + imageWidth > drawPanelSize.getWidth()) {
+                    vehicle.setLocation(new Location(drawPanelSize.getWidth() - imageWidth, oldLocation.getY()));
+                    vehicle.turnAround();
+                }
+
+                // Check the y-axis
+                if (vehicle.getLocation().getY() < 0) {
+                    vehicle.setLocation(new Location(oldLocation.getX(), 0));
+                    vehicle.turnAround();
+                } else if (vehicle.getLocation().getY() + imageHeight > drawPanelSize.getHeight()) {
+                    vehicle.setLocation(new Location(oldLocation.getX(), drawPanelSize.getHeight() - imageHeight));
+                    vehicle.turnAround();
+                }
+            }
+
+            onUpdate(); // Notify that model may have changed
         }
     }
 
@@ -120,6 +149,7 @@ public class CarController implements UpdateListener {
     void liftTruckBed(){
         model.liftTruckBed();
     }
+
     void lowerTruckBed(){
         model.lowerTruckBed();
     }

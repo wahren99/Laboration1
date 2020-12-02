@@ -6,4 +6,10 @@ public interface Movable {
     void turnLeft();
     /** Turns 90 degrees right on the spot. */
     void turnRight();
+
+    /** Turns 180 degrees right on the spot. */
+    default void turnAround() {
+        turnLeft();
+        turnLeft();
+    }
 }

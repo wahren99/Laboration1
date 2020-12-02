@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
  * each of it's components.
  **/
 public class CarView extends JFrame implements UpdateListener {
-    /** the width of the frame*/
+    /** the width of the frame */
     public static final int X = 800;
     /** the height of the frame */
     public static final int Y = 800;
@@ -62,6 +62,20 @@ public class CarView extends JFrame implements UpdateListener {
         drawPanel = new DrawPanel(viewModel, X, Y-240);
 
         initComponents(framename);
+    }
+
+    public Size getDrawPanelSize() {
+        return new Size() {
+            @Override
+            public int getWidth() {
+                return drawPanel.getWidth();
+            }
+
+            @Override
+            public int getHeight() {
+                return drawPanel.getHeight();
+            }
+        };
     }
 
     // Sets everything in place and fits everything

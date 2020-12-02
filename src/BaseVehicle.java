@@ -47,7 +47,11 @@ public abstract class BaseVehicle implements Vehicle {
         return enginePower;
     }
 
-    @Override
+    /**
+     * Returns the color of the car.
+     *
+     * @return Color of the car
+     */
     public Color getColor(){
         return color;
     }

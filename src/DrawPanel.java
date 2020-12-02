@@ -8,7 +8,7 @@ import javax.swing.*;
 /**
  * This panel represent the animated part of the view with the car images.
  */
-public final class DrawPanel extends JPanel {
+public final class DrawPanel extends JPanel implements Size {
     /** The model for what to draw. */
     private final ViewModel viewModel;
 

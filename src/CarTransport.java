@@ -96,11 +96,6 @@ public class CarTransport<T extends Vehicle & Transportable> implements Vehicle,
     }
 
     @Override
-    public Color getColor() {
-        return base.getColor();
-    }
-
-    @Override
     public double getCurrentSpeed() {
         return base.getCurrentSpeed();
     }

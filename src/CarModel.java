@@ -17,16 +17,12 @@ public class CarModel {
     /** Reference to the Scania. */
     private final Scania scania;
 
-    private final double width, height;
-
     /**
      * Constructs the carModel
      *
      * @param listener Callback that fires when the model changes.
-     * @param width
-     * @param height
      */
-    public CarModel(UpdateListener listener, double width, double height) {
+    public CarModel(UpdateListener listener) {
         Volvo240 volvo = new Volvo240();
         volvo.setLocation(new Location(0, 0 * 100));
         cars.add(volvo);
@@ -40,8 +36,6 @@ public class CarModel {
         scania.setLocation(new Location(0, 2 * 100));
 
         this.listener = listener;
-        this.width = width;
-        this.height = height;
     }
 
     /**
@@ -54,25 +48,11 @@ public class CarModel {
     }
 
     /**
-     * Moves all cars and turns them 180 degrees right before they collide with the walls.
+     * Moves all cars a small step forward in time.
      */
     public void tick() {
-        for (Vehicle car : cars) {
-            car.move();
-
-            Location oldLocation = car.getLocation();
-
-            // FIXME
-            if (car.getLocation().getY() < 0) {
-                car.setLocation(new Location(oldLocation.getX(), 0));
-
-                car.turnLeft();
-                car.turnLeft();
-            } else if (car.getLocation().getY() + 60 > height) {
-                car.setLocation(new Location(oldLocation.getX(), height-60));
-                car.turnLeft();
-                car.turnLeft();
-            }
+        for (Vehicle vehicle : cars) {
+            vehicle.move();
         }
         listener.onUpdate();
     }
