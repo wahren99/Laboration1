@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 
 /**
@@ -20,6 +22,13 @@ public class ViewModel {
      */
     public ViewModel(Iterable<CarSprite> sprites) {
         this.sprites = sprites;
+    }
+
+    /**
+     * Constructs a new ViewModel that shows nothing.
+     */
+    public ViewModel() {
+        this(Collections.emptyList());
     }
 
     /**

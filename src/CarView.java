@@ -2,8 +2,6 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * This class represents the full view of the MVC pattern of your car simulator.
@@ -16,6 +14,8 @@ public class CarView extends JFrame implements UpdateListener {
     public static final int X = 800;
     /** the height of the frame */
     public static final int Y = 800;
+
+    private final SpeedometerView speedometerView;
 
     /** The controller member */
     CarController carC;
@@ -54,12 +54,13 @@ public class CarView extends JFrame implements UpdateListener {
      *  Constructs a carview
      * @param framename
      * @param cc
-     * @param viewModel
+     * @param model
      */
-    public CarView(String framename, CarController cc, ViewModel viewModel){
+    public CarView(String framename, CarController cc, CarModel model){
         this.carC = cc;
-        viewModel.setListener(this);
-        drawPanel = new DrawPanel(viewModel, X, Y-240);
+        model.addListener(this);
+        drawPanel = new DrawPanel(model, X, Y-240);
+        speedometerView = new SpeedometerView(model);
 
         initComponents(framename);
     }
@@ -88,6 +89,8 @@ public class CarView extends JFrame implements UpdateListener {
 
         this.add(drawPanel);
 
+        this.add(speedometerView);
+
         /**
          * sets minimum, maximum, and stepsize for the gas spinner.
          */
@@ -96,7 +99,7 @@ public class CarView extends JFrame implements UpdateListener {
                 new SpinnerNumberModel(0, //initial value
                         0, //min
                         100, //max
-                        1);//step
+                        10);//step
         gasSpinner = new JSpinner(spinnerModel);
         gasSpinner.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {

@@ -162,4 +162,9 @@ public abstract class BaseVehicle implements Vehicle {
     public double getLength() {
         return length;
     }
+
+    @Override
+    public String getModelName(){
+        return modelName;
+    }
 }

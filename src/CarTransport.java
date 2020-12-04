@@ -96,6 +96,11 @@ public class CarTransport<T extends Vehicle & Transportable> implements Vehicle,
     }
 
     @Override
+    public String getModelName() {
+        return base.getModelName();
+    }
+
+    @Override
     public double getCurrentSpeed() {
         return base.getCurrentSpeed();
     }

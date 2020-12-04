@@ -56,7 +56,7 @@ public class Scania extends BaseVehicle {
     @Override
     public void startEngine(){
         if (!platform.allowedToDrive())
-            throw new IllegalStateException("Cannot drive with your truck bed down silly");
+            throw new IllegalStateException("Cannot drive with your truck bed up silly");
         super.startEngine();
     }
 

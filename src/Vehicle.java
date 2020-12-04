@@ -71,6 +71,13 @@ public interface Vehicle extends Movable, Transportable {
     double getLength();
 
     /**
+     * Returns the model name
+     * @return the name of the model
+     */
+
+    String getModelName();
+
+    /**
      * Accepts the given visitor and dispatches to the specific method.
      *
      * @param visitor The visitor.
@@ -83,4 +90,5 @@ public interface Vehicle extends Movable, Transportable {
      * Honks.
      */
     default void honk() { System.out.println("HOONK HOONK!"); }
+
 }
