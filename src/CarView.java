@@ -9,7 +9,7 @@ import java.awt.*;
  * It communicates with the Controller by calling methods of it when an action fires of in
  * each of it's components.
  **/
-public class CarView extends JFrame implements UpdateListener {
+public class CarView extends JFrame {
     /** the width of the frame */
     public static final int X = 800;
     /** the height of the frame */
@@ -17,8 +17,8 @@ public class CarView extends JFrame implements UpdateListener {
 
     private final SpeedometerView speedometerView;
 
-    /** The controller member */
-    CarController carC;
+    /** The simulation model. */
+    CarModel model;
 
     /** The Draw panel used to draw*/
     private final DrawPanel drawPanel;
@@ -53,33 +53,19 @@ public class CarView extends JFrame implements UpdateListener {
     /**
      *  Constructs a carview
      * @param framename
-     * @param cc
      * @param model
      */
-    public CarView(String framename, CarController cc, CarModel model){
-        this.carC = cc;
-        model.addListener(this);
+    public CarView(String framename, CarModel model){
+        this.model = model;
         drawPanel = new DrawPanel(model, X, Y-240);
         speedometerView = new SpeedometerView(model);
 
         initComponents(framename);
     }
 
-    public Size getDrawPanelSize() {
-        return new Size() {
-            @Override
-            public int getWidth() {
-                return drawPanel.getWidth();
-            }
-
-            @Override
-            public int getHeight() {
-                return drawPanel.getHeight();
-            }
-        };
-    }
-
-    // Sets everything in place and fits everything
+    /**
+     * Sets everything in place and fits everything
+     */
     // TODO: Take a good look and make sure you understand how these methods and components work
     private void initComponents(String title) {
 
@@ -91,7 +77,7 @@ public class CarView extends JFrame implements UpdateListener {
 
         this.add(speedometerView);
 
-        /**
+        /*
          * sets minimum, maximum, and stepsize for the gas spinner.
          */
 
@@ -107,7 +93,7 @@ public class CarView extends JFrame implements UpdateListener {
             }
         });
 
-        /**
+        /*
          * edits layout of the gas panel.
          */
         gasPanel.setLayout(new BorderLayout());
@@ -116,7 +102,7 @@ public class CarView extends JFrame implements UpdateListener {
 
         this.add(gasPanel);
 
-        /**
+        /*
          * sets layot of the control panel.
          * adds all the buttons and sets position.
          */
@@ -134,37 +120,37 @@ public class CarView extends JFrame implements UpdateListener {
         controlPanel.setBackground(Color.CYAN);
 
 
-        /**
+        /*
          * sets color of the start button.
          */
         startButton.setBackground(Color.blue);
         startButton.setForeground(Color.green);
         startButton.setPreferredSize(new Dimension(X/5-15,200));
-        startButton.addActionListener(e -> carC.startEngine());
+        startButton.addActionListener(e -> model.startEngine());
         this.add(startButton);
 
-        /**
+        /*
          * sets color of the stop button.
          */
 
         stopButton.setBackground(Color.red);
         stopButton.setForeground(Color.black);
         stopButton.setPreferredSize(new Dimension(X/5-15,200));
-        stopButton.addActionListener(e -> carC.stopEngine());
+        stopButton.addActionListener(e -> model.stopEngine());
         this.add(stopButton);
 
-        /** edits turbo status when the turbo buttons are pressed.*/
-        turboOnButton.addActionListener(e -> carC.turnTurboOn());
-        turboOffButton.addActionListener(e -> carC.turnTurboOff());
+        /* edits turbo status when the turbo buttons are pressed.*/
+        turboOnButton.addActionListener(e -> model.turnTurboOn());
+        turboOffButton.addActionListener(e -> model.turnTurboOff());
 
-        /** edits turbo status when the turbo buttons are pressed.*/
-        liftBedButton.addActionListener(e -> carC.liftTruckBed());
-        lowerBedButton.addActionListener(e -> carC.lowerTruckBed());
+        /* edits turbo status when the turbo buttons are pressed.*/
+        liftBedButton.addActionListener(e -> model.liftTruckBed());
+        lowerBedButton.addActionListener(e -> model.lowerTruckBed());
 
         // This actionListener is for the gas button only
-        gasButton.addActionListener(e -> carC.gas(gasAmount));
+        gasButton.addActionListener(e -> model.gas(gasAmount));
 
-        brakeButton.addActionListener(e -> carC.brake(gasAmount));
+        brakeButton.addActionListener(e -> model.brake(gasAmount));
 
         // Make the frame pack all it's components by respecting the sizes if possible.
         this.pack();
@@ -177,14 +163,5 @@ public class CarView extends JFrame implements UpdateListener {
         this.setVisible(true);
         // Make sure the frame exits when "x" is pressed
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    }
-
-    /**
-     * Repaints when called upon
-     */
-    @Override
-    public void onUpdate() {
-        // repaint() calls the paintComponent method of the panel
-        drawPanel.repaint();
     }
 }

@@ -5,8 +5,8 @@ import java.awt.event.ActionListener;
 /**
 * This class represents the Controller part in the MVC pattern.
  *
- * It's responsibilities is to listen to the View and responds in an appropriate manner by
- * modifying the model state and the updating the view.
+ * It's responsibilities is to wait for time to pass and responds in an appropriate manner by
+ * notifying the Model.
  */
 public class CarController {
     // member fields:
@@ -46,39 +46,5 @@ public class CarController {
         public void actionPerformed(ActionEvent e) {
             model.tick();
         }
-    }
-
-    void startEngine() {
-        model.startEngine();
-    }
-
-    void stopEngine() {
-        model.stopEngine();
-    }
-
-    // Calls the gas method for each car once
-    void gas(int amount) {
-        model.gas(amount);
-    }
-
-    // Calls the gas method for each car once
-    void brake(int amount) {
-        model.brake(amount);
-    }
-
-    void turnTurboOn() {
-        model.turnTurboOn();
-    }
-
-    void turnTurboOff() {
-        model.turnTurboOff();
-    }
-
-    void liftTruckBed(){
-        model.liftTruckBed();
-    }
-
-    void lowerTruckBed(){
-        model.lowerTruckBed();
     }
 }

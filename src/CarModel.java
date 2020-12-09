@@ -1,4 +1,5 @@
 import java.awt.image.BufferedImage;
+import java.text.CollationElementIterator;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -9,14 +10,9 @@ import java.util.List;
  */
 public class CarModel {
     /** A list of cars. */
-    private final List<Vehicle> cars = new ArrayList<>();
+    private final List<Vehicle> cars;
     /** Listeners that gets notified when the model changes. */
     private final List<UpdateListener> listeners = new ArrayList<>();
-
-    /** Reference to the Saab. */
-    private final Saab95 saab;
-    /** Reference to the Scania. */
-    private final Scania scania;
 
     private static final double width = 600, height = 500,
         /** Width and height of each vehicle. */
@@ -25,18 +21,8 @@ public class CarModel {
     /**
      * Constructs the carModel
      */
-    public CarModel() {
-        Volvo240 volvo = new Volvo240();
-        volvo.setLocation(new Location(0, 0 * 100));
-        cars.add(volvo);
-
-        saab = new Saab95();
-        saab.setLocation(new Location(0, 1 * 100));
-        cars.add(saab);
-
-        scania = new Scania();
-        cars.add(scania);
-        scania.setLocation(new Location(0, 2 * 100));
+    public CarModel(Collection<Vehicle> vehicles) {
+        this.cars = new ArrayList<>(vehicles);
     }
 
     /**
@@ -163,7 +149,13 @@ public class CarModel {
      * Turns turbo on
      */
     void turnTurboOn() {
-        saab.setTurboOn();
+
+        for (Vehicle vehicle : cars) {
+            if (vehicle instanceof Saab95) {
+                Saab95 saab = (Saab95) vehicle;
+                saab.setTurboOn();
+            }
+        }
         notifyListeners();
     }
 
@@ -171,7 +163,13 @@ public class CarModel {
      * Turns turbo off
      */
     void turnTurboOff() {
-        saab.setTurboOff();
+
+        for (Vehicle vehicle : cars) {
+            if (vehicle instanceof Saab95) {
+                Saab95 saab = (Saab95) vehicle;
+                saab.setTurboOff();
+            }
+        }
         notifyListeners();
     }
 
@@ -179,7 +177,11 @@ public class CarModel {
      * Lifts the truckbed
      */
     void liftTruckBed(){
-        scania.addTruckBedAngle(70f);
+        for (Vehicle vehicle : cars)
+            if (vehicle instanceof Scania){
+                Scania scania = (Scania) vehicle;
+                scania.addTruckBedAngle(70f);
+            }
         notifyListeners();
     }
 
@@ -187,7 +189,11 @@ public class CarModel {
      * Lower truckbred
      */
     void lowerTruckBed(){
-        scania.addTruckBedAngle(-70f);
+        for (Vehicle vehicle : cars)
+            if (vehicle instanceof Scania){
+                Scania scania = (Scania) vehicle;
+                scania.addTruckBedAngle(-70f);
+            }
         notifyListeners();
     }
 }

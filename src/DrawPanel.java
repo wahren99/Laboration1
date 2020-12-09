@@ -8,7 +8,7 @@ import javax.swing.*;
 /**
  * This panel represent the animated part of the view with the car images.
  */
-public final class DrawPanel extends JPanel implements Size {
+public final class DrawPanel extends JPanel implements UpdateListener {
     /** The model that has the state of what we want to draw. */
     private final CarModel model;
 
@@ -21,6 +21,7 @@ public final class DrawPanel extends JPanel implements Size {
         this.setBackground(Color.green);
 
         this.model = model;
+        model.addListener(this);
     }
 
     /** This method is called each time the panel updates/refreshes/repaints itself. */
@@ -41,5 +42,14 @@ public final class DrawPanel extends JPanel implements Size {
                     (int) model.getVehicleSize(), (int) model.getVehicleSize(),
                     null); // see javadoc for more info on the parameters
         }
+    }
+
+    /**
+     * Repaints when called upon.
+     */
+    @Override
+    public void onUpdate() {
+        // repaint() calls the paintComponent method of the panel
+        repaint();
     }
 }
