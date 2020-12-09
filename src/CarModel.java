@@ -1,8 +1,7 @@
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.text.CollationElementIterator;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -18,10 +17,14 @@ public class CarModel {
         /** Width and height of each vehicle. */
         vehicleSize = 60;
 
+    /** Maximum number of allowed cars in this simulation. */
+    private static final int MAX_NR_VEHICLES = 10;
+
     /**
      * Constructs the carModel
      */
     public CarModel(Collection<Vehicle> vehicles) {
+        if (vehicles.size() > MAX_NR_VEHICLES) throw new IllegalArgumentException("Too many cars dum dum");
         this.cars = new ArrayList<>(vehicles);
     }
 
@@ -195,5 +198,32 @@ public class CarModel {
                 scania.addTruckBedAngle(-70f);
             }
         notifyListeners();
+    }
+
+    public void removeCar() {
+            if (cars.isEmpty()) return;
+
+        Random random = new Random();
+        cars.remove(random.nextInt(cars.size()));
+    }
+
+    public void addCar() {
+        if (cars.size() >= MAX_NR_VEHICLES) {
+            System.out.println("Too many cars!");
+            return;
+        }
+
+        Random random = new Random();
+        Vehicle choices[] = new Vehicle[] {
+                VehicleFactory.createVolvo(),
+                VehicleFactory.createSaab95(),
+                VehicleFactory.createScania(),
+        };
+        Vehicle choice = choices[random.nextInt(choices.length)];
+        choice.setLocation(new Location(random.nextDouble() * (getWidth() - getVehicleSize()),
+                random.nextDouble() * (getHeight() - getVehicleSize())));
+        for (int i = 0; i < random.nextInt(4); ++i) choice.turnRight();
+
+        cars.add(choice);
     }
 }

@@ -14,8 +14,9 @@ class Volvo240Test {
 
         // Try to move forward
         car.startEngine();
+        car.gas(1);
         car.move();
-        assertEquals(new Location(0, 0.1), car.getLocation());
+        assertTrue(car.getLocation().getY() > 0);
     }
 
     @Test
@@ -33,14 +34,10 @@ class Volvo240Test {
         NormalCar car = new Volvo240();
         car.startEngine();
 
-        // Go slowly
-        car.move();
-        assertEquals(new Location(0, 0.1), car.getLocation());
-
         // Momma's gonna gas this thing
         car.gas(1);
         car.move();
-        assertEquals(new Location(0, 0.1 + (0.1 + 1 * 1.25)), car.getLocation());
+        assertEquals(new Location(0, (1 * 1.25)), car.getLocation());
     }
 
     @Test
@@ -50,10 +47,12 @@ class Volvo240Test {
 
         car.gas(1);
         car.brake(1);
+        car.brake(1);
+        car.brake(1);
 
         car.move();
         // Assert that we are back to baby speeds
-        assertEquals(0.1, car.getLocation().y, 1e-3);
+        assertEquals(0, car.getLocation().y, 1e-3);
     }
 
     @Test

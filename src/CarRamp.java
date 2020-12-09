@@ -1,12 +1,9 @@
-import java.util.ArrayDeque;
-import java.util.Collection;
-import java.util.Deque;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Class CarRamp that can load cars.
  */
-public final class CarRamp<T extends Vehicle & Transportable> implements AdjustablePlatform, Transporter<T> {
+public interface CarRamp<T extends Vehicle & Transportable> extends AdjustablePlatform, Transporter<T> {
     /**
      * Status of ramp can either be up or down.
      */
@@ -64,78 +61,104 @@ public final class CarRamp<T extends Vehicle & Transportable> implements Adjusta
     }
 
     /** The maximum length of the carriage. */
-    public static final float MAX_LOADED_CARS_LENGTH = 10;
-
-    /** Status of ramp **/
-    private Status status;
-    /** Collection of currently loaded cars. */
-    private final CarStorage<T> loadedCars;
-
-    /**
-     * Constructs car ramp.
-     *
-     * @param status The initial status of the car ramp.
-     * @param storage The car storage implementation to use for this car ramp.
-     */
-    public CarRamp(Status status, CarStorage<T> storage) {
-        this.status = status;
-        this.loadedCars = storage;
-    }
-    /** Sets up as default position of ramp. **/
-    public CarRamp(CarStorage<T> storage) {
-        this(Status.UP, storage);
-    }
-
-    /**
-     * Returns the up-down status of the ramp.
-     *
-     * @return Whether the ramp is up or down.
-     */
-    public Status getStatus() {
-        return status;
-    }
-
-    /**
-     * Sets whether the ramp is up or down.
-     *
-     * @param status The new status.
-     */
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    @Override
-    public boolean allowedToDrive() {
-        return switch (status) {
-            case UP -> true;
-            case DOWN -> false;
-        };
-    }
+    float MAX_LOADED_CARS_LENGTH = 10;
 
     /**
      * Returns an iterator of the currently loaded cars.
      * @return The currently loaded cars.
      */
-    public Iterable<T> getLoadedCars() {
-        return loadedCars;
+    CarStorage<T> getLoadedCars();
+
+    class BaseCarRamp<T extends Vehicle> implements CarRamp<T> {
+        /** Collection of currently loaded cars. */
+        private final CarStorage<T> loadedCars;
+
+        /**
+         * Constructs a new unspecialized car ramp.
+         *
+         * @param storage The car storage implementation to use for this car ramp.
+         */
+        BaseCarRamp(CarStorage<T> storage) {
+            this.loadedCars = storage;
+        }
+
+        @Override
+        public CarStorage<T> getLoadedCars() {
+            return loadedCars;
+        }
+
+        @Override
+        public boolean allowedToDrive() {
+            return true;
+        }
+
+        @Override
+        public void loadThing(T car) {
+            if (loadedCars.stream().mapToDouble(Vehicle::getLength).sum() + car.getLength() > MAX_LOADED_CARS_LENGTH)
+                throw new IllegalArgumentException("That car plus the others be a too long boy!");
+
+            loadedCars.addCar(car);
+        }
+
+        @Override
+        public T unloadThing() {
+            return loadedCars.removeCar();
+        }
     }
 
-    @Override
-    public void loadThing(T car) {
-        if (getStatus() != CarRamp.Status.DOWN)
+    final class UpCarRamp<T extends Vehicle> implements CarRamp<T> {
+        private final BaseCarRamp<T> base;
+
+        public UpCarRamp(CarStorage<T> storage) {
+            base = new BaseCarRamp<T>(storage);
+        }
+
+        @Override
+        public boolean allowedToDrive() {
+            return true;
+        }
+
+        @Override
+        public CarStorage<T> getLoadedCars() {
+            return base.getLoadedCars();
+        }
+
+        @Override
+        public void loadThing(T thing) {
             throw new IllegalStateException("Ramp is not lowered!");
+        }
 
-        if (loadedCars.stream().mapToDouble(Vehicle::getLength).sum() + car.getLength() > MAX_LOADED_CARS_LENGTH)
-            throw new IllegalArgumentException("That car plus the others be a too long boy!");
-
-        loadedCars.addCar(car);
+        @Override
+        public T unloadThing() {
+            throw new IllegalStateException("Ramp is not lowered!");
+        }
     }
 
-    @Override
-    public T unloadThing() {
-        if (getStatus() != CarRamp.Status.DOWN)
-            throw new IllegalStateException("Ramp is not lowered!");
+    final class DownCarRamp<T extends Vehicle> implements CarRamp<T> {
+        private final BaseCarRamp<T> base;
 
-        return loadedCars.removeCar();
+        public DownCarRamp(CarStorage<T> storage) {
+            base = new BaseCarRamp<T>(storage);
+        }
+
+        @Override
+        public boolean allowedToDrive() {
+            return false;
+        }
+
+        @Override
+        public CarStorage<T> getLoadedCars() {
+            return base.getLoadedCars();
+        }
+
+        @Override
+        public void loadThing(T thing) {
+            base.loadThing(thing);
+        }
+
+        @Override
+        public T unloadThing() {
+            return base.unloadThing();
+        }
     }
 }

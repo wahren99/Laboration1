@@ -30,9 +30,9 @@ public class CarTransportTest {
         carTransport.loadThing(saab);
         carTransport.setPlatformStatus(CarRamp.Status.UP);
         carTransport.startEngine();
+        carTransport.gas(1);
         carTransport.move();
-        assertEquals(saab.getLocation(), new Location(0,0.1));
-        assertEquals(saab.getLocation(),carTransport.getLocation());
+        assertEquals(saab.getLocation(), carTransport.getLocation());
     }
 
     @Test

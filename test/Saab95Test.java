@@ -21,17 +21,18 @@ class Saab95Test {
     void testMoveForward() {
         Saab95 saab2 = new Saab95();
         saab2.startEngine();
-
+        saab2.gas(1);
         saab2.move();
-        assertEquals(new Location(0,0.1), saab2.getLocation());
+        assertTrue(saab2.getLocation().getY() > 0);
     }
     @Test
     void testGasSpeed(){
         Saab95 saab = new Saab95();
         saab.startEngine();
         saab.gas(1);
-        assertEquals(1.35, saab.getCurrentSpeed());
+        assertEquals(1.25, saab.getCurrentSpeed());
     }
+
     @Test
     void testBrakeSpeed(){
         Saab95 saab = new Saab95();

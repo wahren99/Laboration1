@@ -9,7 +9,7 @@ public class CarTransport<T extends Vehicle & Transportable> implements Vehicle,
     /** The base vehicle for delegation. */
     private final BaseVehicle base;
     /** The car ramp where cars drive up and are stored. */
-    private final CarRamp<T> platform;
+    private CarRamp<T> platform;
 
     /**
      * Constructs an instance of a Car Transport.
@@ -29,7 +29,7 @@ public class CarTransport<T extends Vehicle & Transportable> implements Vehicle,
                 return getEnginePower() * /* this fella go wroom */ 10000;
             }
         };
-        platform = new CarRamp<>(carStorage);
+        platform = new CarRamp.UpCarRamp<>(carStorage);
     }
 
     /**
@@ -41,7 +41,10 @@ public class CarTransport<T extends Vehicle & Transportable> implements Vehicle,
     public void setPlatformStatus(CarRamp.Status status) {
         if (!isStationary() || base.isEngineOn())
             throw new IllegalStateException("Cannot change truck bed when not stationary dum dum.");
-        platform.setStatus(status);
+        platform = switch(status) {
+            case UP -> new CarRamp.UpCarRamp<T>(platform.getLoadedCars());
+            case DOWN -> new CarRamp.DownCarRamp<T>(platform.getLoadedCars());
+        };
     }
 
     @Override

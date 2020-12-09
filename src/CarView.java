@@ -16,6 +16,7 @@ public class CarView extends JFrame {
     public static final int Y = 800;
 
     private final SpeedometerView speedometerView;
+    private final AddRemoveCarsView addRemoveCarsView;
 
     /** The simulation model. */
     CarModel model;
@@ -59,6 +60,7 @@ public class CarView extends JFrame {
         this.model = model;
         drawPanel = new DrawPanel(model, X, Y-240);
         speedometerView = new SpeedometerView(model);
+        addRemoveCarsView = new AddRemoveCarsView(model);
 
         initComponents(framename);
     }
@@ -76,6 +78,8 @@ public class CarView extends JFrame {
         this.add(drawPanel);
 
         this.add(speedometerView);
+
+        this.add(addRemoveCarsView);
 
         /*
          * sets minimum, maximum, and stepsize for the gas spinner.
