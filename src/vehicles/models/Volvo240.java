@@ -29,4 +29,9 @@ public class Volvo240 extends NormalCar {
     public int getNrOfDoors() {
         return 4;
     }
+
+    public Volvo240 gasMuch() {
+        gas(1);
+        return this;
+    }
 }

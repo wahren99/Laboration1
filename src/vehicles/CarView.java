@@ -26,19 +26,22 @@ public class CarView extends JFrame {
     /** The Draw panel used to draw*/
     private final DrawPanel drawPanel;
 
-    private final ButtonsController buttons;
+    private final ButtonsView buttonsView;
 
     /**
      *  Constructs a carview
      * @param framename
      * @param model
      */
-    public CarView(String framename, CarModel model){
+    public CarView(String framename, CarModel model) {
         this.model = model;
         drawPanel = new DrawPanel(model, X, Y-240);
         speedometerView = new SpeedometerView(model);
         addRemoveCarsView = new AddRemoveCarsView(model);
-        buttons = new ButtonsController(model);
+
+        buttonsView = new ButtonsView();
+        ButtonsController buttonsController = new ButtonsController(model);
+        buttonsView.addObserver(buttonsController);
 
         initComponents(framename);
     }
@@ -56,7 +59,7 @@ public class CarView extends JFrame {
         this.add(drawPanel);
         this.add(speedometerView);
         this.add(addRemoveCarsView);
-        add(buttons);
+        add(buttonsView);
 
         // Make the frame pack all it's components by respecting the sizes if possible.
         this.pack();

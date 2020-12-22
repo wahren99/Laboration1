@@ -46,7 +46,7 @@ public class Scania extends BaseVehicle {
 
     /** Constructs a new vehicles.models.Scania truck. */
     Scania() {
-        super(120, Color.YELLOW, "ScaniaV6", 12);
+        super(130, Color.YELLOW, "ScaniaV6", 12);
     }
 
     @Override

@@ -21,7 +21,7 @@ public class CarModel {
         vehicleSize = 60;
 
     /** Maximum number of allowed cars in this simulation. */
-    private static final int MAX_NR_VEHICLES = 10;
+    private static final int MAX_NR_VEHICLES = 25;
 
     /**
      * Constructs the carModel
@@ -117,11 +117,22 @@ public class CarModel {
         notifyListeners();
     }
 
+    private static void killVelocity(Vehicle v) {
+        // Brake while still has speed
+        while (Math.abs(v.getCurrentSpeed()) > 1e-1) {
+            v.brake(1);
+        }
+    }
+
     /**
      * Stops vehicles of all engines
      */
     void stopEngine() {
-        cars.forEach(Vehicle::stopEngine);
+        for (Vehicle v : cars) {
+            killVelocity(v);
+
+            v.stopEngine();
+        }
         notifyListeners();
     }
 
